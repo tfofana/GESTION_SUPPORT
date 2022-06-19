@@ -1,0 +1,57 @@
+Docker container for Gestsup - Logiciel de Gestion de Support (https://gestsup.fr/)
+
+******************Installation**********************************************
+Firstly, create new folder gestsup
+
+$ mkdir gestsup
+$ cd gestsup
+
+--Create a docker-compose.yml file and fill it with the code below. We can change the MySql variables.
+
+version: "2"
+services:
+  gestsup:
+    image: xhubert/gestsup:3.2.15
+    restart: unless-stopped
+    container_name: gestsup
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - gestsup_db
+    networks:
+      - gestsup
+  gestsup_db:
+    image: mariadb:10.7
+    restart: unless-stopped
+    container_name: gestsup_db
+    environment:
+      MYSQL_ROOT_PASSWORD: tito
+      MYSQL_DATABASE: gestsup
+      MYSQL_USER: gestsup
+      MYSQL_PASSWORD: tito
+    networks:
+      - gestsup
+
+networks:  
+  gestsup:
+    driver: bridge
+
+
+
+It's all. You can run your application with this command :
+
+$docker-compose up -d
+
+Now, browse to http://yourip, and proceed through installation. When it will ask for database credentials, fill it following:
+
+
+    MySQL Host: gestsup_db
+    MySQL Database: gestsup
+    MySQL User: gestsup
+    MySQL Password: tito
+
+Enjoy !
+
+
+vi /etc/apache2/conf-available/security.conf
